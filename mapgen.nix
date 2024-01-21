@@ -1,8 +1,9 @@
 
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, modulesPath, inputs, ... }:
 
 let
-  unstablePkgs = import ( fetchTarball https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz ) { config = config.nixpkgs.config; };
+  system = config.nixpkgs.system;
+  unstablePkgs = inputs.nixpkgs-unstable.outputs.legacyPackages."${system}";
 in
 {
   # Make an unprivileged, system user for running these tasks

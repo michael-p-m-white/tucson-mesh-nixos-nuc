@@ -1,17 +1,20 @@
 
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, modulesPath, inputs, ... }:
 
 let
   vid = "051d";
   pid = "0002";
   upsname = "apc";
   upsmonUser = "nut";
+  system = "x86_64-linux"; #config.nixpkgs.system;
+  unstablePkgs = inputs.nixpkgs-unstable.outputs.legacyPackages."${system}";
+  unstableModulesPath = unstablePkgs.path + "/nixos/modules";
 in
 {
   # Load in the nixos-unstable version of ups.nix (has fixes, etc)
   disabledModules = [ "services/monitoring/ups.nix" ];
   imports = [
-    <nixos-unstable/nixos/modules/services/monitoring/ups.nix>
+    (unstableModulesPath + "/services/monitoring/ups.nix")
   ];
   
   # APC UPS declaration

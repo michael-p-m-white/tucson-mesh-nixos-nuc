@@ -2,10 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, modulesPath, ... }:
 
 let
-  unstablePkgs = import ( fetchTarball https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz ) { config = config.nixpkgs.config; };
+  system = config.nixpkgs.system;
+  unstablePkgs = inputs.nixpkgs-unstable.outputs.legacyPackages."${system}";
   natInterface = "enp1s0";
 in
 {
@@ -13,7 +14,7 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       # Hardening profile
-      <nixpkgs/nixos/modules/profiles/hardened.nix>
+      (modulesPath + "/profiles/hardened.nix")
       ./ups.nix
       ./mapgen.nix
       ./caddy.nix
